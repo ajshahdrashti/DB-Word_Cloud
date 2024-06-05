@@ -102,7 +102,7 @@ const words = [
  {'text': 'બારડોલી', 'size': 2},
  {'text': 'મત', 'size': 2}];
 const layout = d3.layout.cloud()
-    .size([700, 700])
+    .size([500, 500])
     .words(words.map(d => ({ text: d.text, size: d.size })))
     .padding(5)
     .fontSize(d => d.size)
