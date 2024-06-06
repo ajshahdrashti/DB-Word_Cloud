@@ -113,6 +113,11 @@ const layout = d3.layout.cloud()
 
 layout.start();
 
+function getRandomColor() {
+    const colors = ['--color1', '--color2', '--color3'];
+    return colors[Math.floor(Math.random() * colors.length)];
+}
+
 function draw(words) {
     console.log("Drawing words:", words);
     
@@ -126,7 +131,7 @@ function draw(words) {
         .data(words)
         .enter().append("text")
         .style("font-size", d => d.size + "px")
-        .style("fill", "#69b3a2")
+        .style("fill",() => `var(${getRandomColor()})`) // Set random color variable
         .attr("text-anchor", "middle")
         .attr("transform", d => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
         .text(d => d.text)
