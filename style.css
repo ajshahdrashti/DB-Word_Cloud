@@ -20,3 +20,10 @@ body {
     border-radius: 5px;
     pointer-events: none;
 }
+/* Define CSS variables for colors */
+:root {
+    --color1: #89a;
+    --color2: #9ab;
+    --color3: #abc;
+    --hover-color: #ff6347; /* Define a hover color */
+}
