@@ -115,6 +115,8 @@ layout.start();
 
 function draw(words) {
     console.log("Drawing words:", words);
+    const colors = ['#181', '#33a', '#c38']; // Define your colors here
+ 
     d3.select("#wordcloud")
         .append("svg")
         .attr("width", layout.size()[0])
@@ -125,7 +127,7 @@ function draw(words) {
         .data(words)
         .enter().append("text")
         .style("font-size", d => d.size + "px")
-        .style("fill", "#69b3a2")
+        .style("fill", () => colors[Math.floor(Math.random() * colors.length)]) // Randomly select a color
         .attr("text-anchor", "middle")
         .attr("transform", d => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
         .text(d => d.text)
