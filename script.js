@@ -102,7 +102,9 @@ const words = [
  {'text': 'બારડોલી', 'size': 2},
  {'text': 'મત', 'size': 2}
 ];
-
+const sumSize = words.reduce((acc, curr) => acc + curr.size, 0);
+const avgSize = sumSize / words.length;
+ 
 const layout = d3.layout.cloud()
     .size([700, 700])
     .words(words.map(d => ({ text: d.text, size: d.size })))
