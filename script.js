@@ -113,11 +113,6 @@ const layout = d3.layout.cloud()
 
 layout.start();
 
-function getRandomColor() {
-    const colors = ['--color1', '--color2', '--color3'];
-    return colors[Math.floor(Math.random() * colors.length)];
-}
-
 function draw(words) {
     console.log("Drawing words:", words);
     
@@ -138,8 +133,11 @@ function draw(words) {
      
         .on("mouseover", function (event, d) {
             console.log("Mouseover on:", d.text);
+            const currentColor = d3.select(this).style("fill"); // Get the current color
+         
             d3.select(this)
-                .style("fill", "#ff6347");
+                .style("fill", `var(--hover-color)`) // Change to hover color
+                .attr("data-original-color", currentColor); // Store the original color
             const tooltip = d3.select("body").append("div")
                 .attr("class", "tooltip")
                 .style("left", (event.pageX + 10) + "px")
@@ -148,8 +146,9 @@ function draw(words) {
                 .style("display", "block");
         })
         .on("mouseout", function () {
+            const originalColor = d3.select(this).attr("data-original-color"); // Get the original color
             d3.select(this)
-                .style("fill", "#69b3a2");
+                .style("fill", originalColor); // Reset to original color
             d3.selectAll(".tooltip").remove();
         });
 }
