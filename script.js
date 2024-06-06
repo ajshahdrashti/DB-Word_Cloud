@@ -107,7 +107,7 @@ const layout = d3.layout.cloud()
     .size([700, 700])
     .words(words.map(d => ({ text: d.text, size: d.size })))
     .padding(1)
-    .rotate(d => d.size > avgSize ? 0 : 90) // Rotate words with size > 15 degrees
+    .rotate(d => d.size > avgSize ? 0 : 90) // Rotate words based on their size compared to the average
     .fontSize(d => d.size * 5)
     .on("end", draw);
 
