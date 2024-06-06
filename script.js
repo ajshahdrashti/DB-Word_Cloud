@@ -102,9 +102,7 @@ const words = [
  {'text': 'બારડોલી', 'size': 2},
  {'text': 'મત', 'size': 2}
 ];
-const sumSize = words.reduce((acc, curr) => acc + curr.size, 0);
-const avgSize = sumSize / words.length;
- 
+
 const layout = d3.layout.cloud()
     .size([700, 700])
     .words(words.map(d => ({ text: d.text, size: d.size })))
@@ -117,8 +115,7 @@ layout.start();
 
 function draw(words) {
     console.log("Drawing words:", words);
-    const colors = ['#181', '#33a', '#c38']; // Define your colors here
- 
+    
     d3.select("#wordcloud")
         .append("svg")
         .attr("width", layout.size()[0])
@@ -129,7 +126,7 @@ function draw(words) {
         .data(words)
         .enter().append("text")
         .style("font-size", d => d.size + "px")
-        .style("fill", () => colors[Math.floor(Math.random() * colors.length)]) // Randomly select a color
+        .style("fill", "#69b3a2")
         .attr("text-anchor", "middle")
         .attr("transform", d => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
         .text(d => d.text)
