@@ -126,7 +126,8 @@ function draw(words) {
         .style("font-size", d => d.size + "px")
         .style("fill", "#69b3a2")
         .attr("text-anchor", "middle")
-        .attr("transform", d => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
+        .attr("transform", d => "translate(" + [d.x, d.y] + ")
+           // rotate(" + d.rotate + ")")
         .text(d => d.text)
         .on("mouseover", function (event, d) {
             console.log("Mouseover on:", d.text);
