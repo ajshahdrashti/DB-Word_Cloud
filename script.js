@@ -106,7 +106,7 @@ const words = [
 const layout = d3.layout.cloud()
     .size([700, 700])
     .words(words.map(d => ({ text: d.text, size: d.size })))
-    .padding(1)
+    .padding(2)
     .rotate(d => d.size > 30 ? 90 : 0) // Rotate words with size > 30 degrees
     .fontSize(d => d.size * 5)
     .on("end", draw);
