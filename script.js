@@ -107,7 +107,7 @@ const layout = d3.layout.cloud()
     .size([700, 700])
     .words(words.map(d => ({ text: d.text, size: d.size })))
     .padding(1)
-    .rotate(d => d.size > avgSize ? 0 : 90) // Rotate words based on their size compared to the average
+    .rotate(d => d.size > 15 ? 90 : 0) // Rotate words with size > 15 degrees
     .fontSize(d => d.size * 5)
     .on("end", draw);
 
@@ -129,6 +129,7 @@ function draw(words) {
         .attr("text-anchor", "middle")
         .attr("transform", d => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
         .text(d => d.text)
+     
         .on("mouseover", function (event, d) {
             console.log("Mouseover on:", d.text);
             d3.select(this)
