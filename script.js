@@ -100,12 +100,14 @@ const words = [
  {'text': 'ક્ષત્રિયો', 'size': 2},
  {'text': 'પાસ', 'size': 2},
  {'text': 'બારડોલી', 'size': 2},
- {'text': 'મત', 'size': 2}];
+ {'text': 'મત', 'size': 2}
+];
+
 const layout = d3.layout.cloud()
     .size([700, 700])
     .words(words.map(d => ({ text: d.text, size: d.size })))
     .padding(1)
-    .fontSize(d => d.size * 3)
+    .fontSize(d => d.size * 5)
     .on("end", draw);
 
 layout.start();
