@@ -104,8 +104,8 @@ const words = [
 const layout = d3.layout.cloud()
     .size([700, 700])
     .words(words.map(d => ({ text: d.text, size: d.size })))
-    .padding(2)
-    .fontSize(d => d.size * 2)
+    .padding(1)
+    .fontSize(d => d.size * 3)
     .on("end", draw);
 
 layout.start();
