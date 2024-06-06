@@ -1,7 +1,7 @@
 console.log("Script loaded");
 
 const words = [
-   {'text': 'પર્યાવરણ', 'size': 30},
+ {'text': 'પર્યાવરણ', 'size': 30},
  {'text': 'વિશ્વ', 'size': 22},
  {'text': 'બેઠક', 'size': 11},
  {'text': 'દિવસ', 'size': 9},
