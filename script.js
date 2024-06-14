@@ -159,3 +159,46 @@ function draw(words) {
             d3.selectAll(".tooltip").remove();
         });
 }
+
+// After the word cloud code:
+function drawPDF() {
+    // 1. PDF.js Approach
+    const pdfViewer = document.getElementById('pdf-viewer');
+    // Assuming your PDF is "your_pdf.pdf" in the same directory as your code
+    const pdfUrl = 'your_pdf.pdf'; // Update with your PDF filename
+    const pdfContainer = pdfViewer.appendChild(document.createElement('div')); 
+    pdfContainer.id = 'pdfContainer'; // Give it a unique ID
+    PDFJS.getDocument(pdfUrl).then(pdf => {
+        pdf.getPage(1).then(page => { // Load the first page (change this if needed)
+            const viewport = page.getViewport({ scale: 1 });
+            const canvas = pdfContainer.appendChild(document.createElement('canvas')); 
+            canvas.id = 'pdfCanvas';
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            const context = canvas.getContext('2d');
+            page.render({
+                canvasContext: context,
+                viewport: viewport
+            }).then(() => {
+                // Optional: Add page navigation, controls, etc.
+            });
+        });
+    });
+
+    // 2. PDF Embed Approach
+    // const pdfEmbedDiv = document.getElementById('pdf-viewer');
+    // pdfEmbedDiv.innerHTML = '<object data="your_pdf.pdf" type="application/pdf" width="100%" height="600px"></object>';
+}
+
+// Call drawPDF() after the word cloud is drawn.
+layout.start();
+layout.on("end", draw); 
+layout.on("end", drawPDF); // Now draw the PDF after word cloud
+
+// Style.css: Add basic styling for the PDF viewer
+#pdf-viewer {
+    width: 80%;
+    height: 600px; 
+    margin: 20px auto; 
+    border: 1px solid #ccc; 
+}
