@@ -165,7 +165,7 @@ function drawPDF() {
     // 1. PDF.js Approach
     const pdfViewer = document.getElementById('pdf-viewer');
     // Assuming your PDF is "your_pdf.pdf" in the same directory as your code
-    const pdfUrl = 'your_pdf.pdf'; // Update with your PDF filename
+    const pdfUrl = r"C:\Users\vipin\Downloads\13 June 2024_CM Daily Briefing.pdf"; // Update with your PDF filename
     const pdfContainer = pdfViewer.appendChild(document.createElement('div')); 
     pdfContainer.id = 'pdfContainer'; // Give it a unique ID
     PDFJS.getDocument(pdfUrl).then(pdf => {
