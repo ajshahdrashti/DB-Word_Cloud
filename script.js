@@ -102,14 +102,15 @@ const words = [
  {'text': 'બારડોલી', 'size': 2},
  {'text': 'મત', 'size': 2}
 ];
+
 function getRandomColor() {
     const letters = '0123456789ABCDEF';
     let color = '#';
     for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
+        color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
-  }
+}
 
 const layout = d3.layout.cloud()
     .size([700, 700])
@@ -134,18 +135,16 @@ function draw(words) {
         .data(words)
         .enter().append("text")
         .style("font-size", d => d.size + "px")
-        .style("fill",() => `var(${getRandomColor()})`) // Set random color variable
+        .style("fill",() => getRandomColor()) // Set random color
         .attr("text-anchor", "middle")
         .attr("transform", d => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
         .text(d => d.text)
-     
         .on("mouseover", function (event, d) {
             console.log("Mouseover on:", d.text);
             const currentColor = d3.select(this).style("fill"); // Get the current color
          
             d3.select(this)
                 .style("fill", `var(--hover-color)`) // Change to hover color
-                // .attr("data-original-color", currentColor); // Store the original color
             const tooltip = d3.select("body").append("div")
                 .attr("class", "tooltip")
                 .style("left", (event.pageX + 10) + "px")
@@ -164,7 +163,7 @@ function draw(words) {
 function addWordDocContents() {
     const wordDocContents = `
         <h2>Word Doc Contents</h2>
-        <iframe src="https://docs.google.com/document/d/1y3t4jKh1j8GduIzLjz4Ahy7-tPqrRZpBzhXZKiToKE0/edit" width="100%" height="600px"></iframe>
+        <iframe src="word_doc.html" width="100%" height="600px"></iframe>
     `;
     d3.select("#word-doc-contents").html(wordDocContents);
 }
