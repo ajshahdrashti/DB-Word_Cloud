@@ -164,9 +164,7 @@ function draw(words) {
 function addWordDocContents() {
     const wordDocContents = `
         <h2>Word Doc Contents</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nulla auctor, vestibulum magna sed, convallis ex.</p>
-        <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
-        <p>Sed posuere consectetur est at lobortis. Cras mattis consectetur purus sit amet fermentum.</p>
+        <iframe src="https://docs.google.com/document/d/1y3t4jKh1j8GduIzLjz4Ahy7-tPqrRZpBzhXZKiToKE0/edit" width="100%" height="600px"></iframe>
     `;
     d3.select("#word-doc-contents").html(wordDocContents);
 }
