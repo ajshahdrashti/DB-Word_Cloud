@@ -114,54 +114,55 @@ function getRandomColor() {
 
 // Load the Gujarat map shape data
 d3.json("shape.json").then(shapeData => {
-  const layout = d3.layout.cloud()
-    .size([700, 700])
-    .words(words.map(d => ({ text: d.text, size: d.size })))
-    .padding(1)
-    .rotate(d => d.size > 30 ? 90 : 0) // Rotate words with size > 30 degrees
-    .fontSize(d => d.size * 5)
-    .on("end", draw);
+    const layout = d3.layout.cloud()
+        .size([700, 700])
+        .words(words.map(d => ({ text: d.text, size: d.size })))
+        .padding(1)
+        .rotate(d => d.size > 30 ? 90 : 0) // Rotate words with size > 30 degrees
+        .fontSize(d => d.size * 5)
+        .on("end", draw);
 
-  layout.start();
+    layout.start();
 
-  function draw(words) {
-    console.log("Drawing words:", words);
+    function draw(words) {
+        console.log("Drawing words:", words);
 
-    // Create the svg element
-    const svg = d3.select("#wordcloud")
-      .append("svg")
-      .attr("width", layout.size()[0])
-      .attr("height", layout.size()[1]);
+        // Create the svg element
+        const svg = d3.select("#wordcloud")
+            .append("svg")
+            .attr("width", layout.size()[0])
+            .attr("height", layout.size()[1]);
 
-    // Create a clip path for the Gujarat map shape
-    const clipPath = svg.append("clipPath")
-      .attr("id", "shapeClipPath");
+        // Create a clip path for the Gujarat map shape
+        const clipPath = svg.append("clipPath")
+            .attr("id", "shapeClipPath");
 
-    // Use the correct projection and scale
-    const projection = d3.geo.mercator()
-      .center([72.57, 22.30]) // Gujarat map center coordinates
-      .scale(1000); // adjust the scale to fit your map
+        // Use the correct projection and scale
+        const projection = d3.geo.mercator()
+            .center([72.57, 22.30]) // Gujarat map center coordinates
+            .scale(1000); // adjust the scale to fit your map
 
-    clipPath.append("path")
-      .datum(shapeData)
-      .attr("d", d3.geo.path().projection(projection));
+        clipPath.append("path")
+            .datum(shapeData)
+            .attr("d", d3.geo.path().projection(projection));
 
-    svg.append("g")
-      .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
-      .attr("clip-path", "url(#shapeClipPath)")
-      .selectAll("text")
-      .data(words)
-      .enter().append("text")
-      .style("font-size", d => d.size + "px")
-      .style("fill", () => getRandomColor())
-      .attr("text-anchor", "middle")
-      .attr("transform", d => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
-      .text(d => d.text)
-      .on("mouseover", function (event, d) {
-        // your mouseover event handler remains the same
-      })
-      .on("mouseout", function () {
-        // your mouseout event handler remains the same
-      });
-  }
+        svg.append("g")
+            .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
+            .attr("clip-path", "url(#shapeClipPath)")
+            .selectAll("text")
+            .data(words)
+            .enter().append("text")
+            .style("font-size", d => d.size + "px")
+            .style("fill", () => getRandomColor())
+            .attr("text-anchor", "middle")
+            .attr("transform", d => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
+            .text(d => d.text)
+            .on("mouseover", function (event, d) {
+                // your mouseover event handler remains the same
+            })
+            .on("mouseout", function () {
+                // your mouseout event handler remains the same
+            });
+    }
+});
 });
