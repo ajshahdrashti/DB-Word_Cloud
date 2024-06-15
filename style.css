@@ -20,6 +20,7 @@ body {
     border-radius: 5px;
     pointer-events: none;
 }
+
 /* Define CSS variables for colors */
 :root {
     --color1: #89a;
