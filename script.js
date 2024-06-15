@@ -122,40 +122,52 @@ const layout = d3.layout.cloud()
 layout.start();
 
 function draw(words) {
-    console.log("Drawing words:", words);
-    
-    d3.select("#wordcloud")
-        .append("svg")
-        .attr("width", layout.size()[0])
-        .attr("height", layout.size()[1])
-        .append("g")
-        .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
-        .selectAll("text")
-        .data(words)
-        .enter().append("text")
-        .style("font-size", d => d.size + "px")
-        .style("fill",() => `var(${getRandomColor()})`) // Set random color variable
-        .attr("text-anchor", "middle")
-        .attr("transform", d => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
-        .text(d => d.text)
-     
-        .on("mouseover", function (event, d) {
-            console.log("Mouseover on:", d.text);
-            const currentColor = d3.select(this).style("fill"); // Get the current color
-         
-            d3.select(this)
-                .style("fill", `var(--hover-color)`) // Change to hover color
-                // .attr("data-original-color", currentColor); // Store the original color
-            const tooltip = d3.select("body").append("div")
-                .attr("class", "tooltip")
-                .style("left", (event.pageX + 10) + "px")
-                .style("top", (event.pageY - 20) + "px")
-                .text(`${d.text}: ${d.size}`)
-                .style("display", "block");
-        })
-        .on("mouseout", function () {
-            d3.select(this)
-                .style("fill", getRandomColor);
-            d3.selectAll(".tooltip").remove();
-        });
-}
+        console.log("Drawing words:", words);
+
+        const svg = d3.select("#wordcloud")
+            .append("svg")
+            .attr("width", layout.size()[0])
+            .attr("height", layout.size()[1]);
+
+        const projection = d3.geoMercator()
+            .fitSize([layout.size()[0], layout.size()[1]], { type: "Polygon", coordinates: [shapeData] });
+        const pathGenerator = d3.geoPath().projection(projection);
+
+        // Create a clipping path from the shape data
+        svg.append("defs").append("clipPath")
+            .attr("id", "shapeClipPath")
+            .append("path")
+            .attr("d", pathGenerator({ type: "Polygon", coordinates: [shapeData] }));
+
+        svg.append("g")
+            .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
+            .attr("clip-path", "url(#shapeClipPath)")
+            .selectAll("text")
+            .data(words)
+            .enter().append("text")
+            .style("font-size", d => d.size + "px")
+            .style("fill", () => getRandomColor())
+            .attr("text-anchor", "middle")
+            .attr("transform", d => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
+            .text(d => d.text)
+            .on("mouseover", function (event, d) {
+                console.log("Mouseover on:", d.text);
+                const currentColor = d3.select(this).style("fill");
+
+                d3.select(this)
+                    .style("fill", "var(--hover-color)");
+
+                const tooltip = d3.select("body").append("div")
+                    .attr("class", "tooltip")
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 20) + "px")
+                    .text(`${d.text}: ${d.size}`)
+                    .style("display", "block");
+            })
+            .on("mouseout", function () {
+                d3.select(this)
+                    .style("fill", getRandomColor);
+                d3.selectAll(".tooltip").remove();
+            });
+    }
+});
