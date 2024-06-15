@@ -158,15 +158,3 @@ function draw(words) {
             d3.selectAll(".tooltip").remove();
         });
 }
-
-// Add word doc contents after the word cloud
-function addWordDocContents() {
-    const wordDocContents = `
-        <h2>Word Doc Contents</h2>
-        <iframe src="word_doc.html" width="100%" height="600px"></iframe>
-    `;
-    d3.select("#word-doc-contents").html(wordDocContents);
-}
-
-layout.on("end", draw); 
-layout.on("end", addWordDocContents); // Add word doc contents after the word cloud
