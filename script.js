@@ -102,15 +102,14 @@ const words = [
  {'text': 'બારડોલી', 'size': 2},
  {'text': 'મત', 'size': 2}
 ];
-
 function getRandomColor() {
     const letters = '0123456789ABCDEF';
     let color = '#';
     for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
+      color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
-}
+  }
 
 const layout = d3.layout.cloud()
     .size([700, 700])
@@ -135,16 +134,18 @@ function draw(words) {
         .data(words)
         .enter().append("text")
         .style("font-size", d => d.size + "px")
-        .style("fill",() => getRandomColor()) // Set random color
+        .style("fill",() => `var(${getRandomColor()})`) // Set random color variable
         .attr("text-anchor", "middle")
         .attr("transform", d => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
         .text(d => d.text)
+     
         .on("mouseover", function (event, d) {
             console.log("Mouseover on:", d.text);
             const currentColor = d3.select(this).style("fill"); // Get the current color
          
             d3.select(this)
                 .style("fill", `var(--hover-color)`) // Change to hover color
+                // .attr("data-original-color", currentColor); // Store the original color
             const tooltip = d3.select("body").append("div")
                 .attr("class", "tooltip")
                 .style("left", (event.pageX + 10) + "px")
