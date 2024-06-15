@@ -12,12 +12,6 @@ body {
     height: 80%;
 }
 
-#word-doc-contents {
-    width: 80%;
-    height: 50%;
-    margin-top: 20px;
-}
-
 .tooltip {
     position: absolute;
     background: white;
