@@ -112,7 +112,10 @@ function getRandomColor() {
     return color;
 }
 
-d3.json('https://github.com/ajshahdrashti/DB-Word_Cloud/blob/main/shape.json').then(shapeData => {
+// Use the raw URL from your GitHub repository for the shape.json file
+const shapeUrl = 'https://raw.githubusercontent.com/ajshahdrashti/DB-Word_Cloud/main/shape.json';
+
+d3.json(shapeUrl).then(shapeData => {
     const projection = d3.geoIdentity().reflectY(true).fitSize([700, 700], shapeData);
     const path = d3.geoPath(projection);
 
@@ -120,7 +123,7 @@ d3.json('https://github.com/ajshahdrashti/DB-Word_Cloud/blob/main/shape.json').t
         .size([700, 700])
         .words(words.map(d => ({ text: d.text, size: d.size })))
         .padding(1)
-        .rotate(d => d.size > 30 ? 90 : 0) // Rotate words with size > 30 degrees
+        .rotate(d => d.size > 30 ? 90 : 0)
         .fontSize(d => d.size * 5)
         .on("end", draw);
 
@@ -133,6 +136,12 @@ d3.json('https://github.com/ajshahdrashti/DB-Word_Cloud/blob/main/shape.json').t
             .append("svg")
             .attr("width", layout.size()[0])
             .attr("height", layout.size()[1]);
+
+        svg.append("defs")
+            .append("clipPath")
+            .attr("id", "gujarat-clip")
+            .append("path")
+            .attr("d", path(shapeData));
 
         svg.append("path")
             .datum(shapeData)
@@ -170,4 +179,6 @@ d3.json('https://github.com/ajshahdrashti/DB-Word_Cloud/blob/main/shape.json').t
                 d3.selectAll(".tooltip").remove();
             });
     }
+}).catch(error => {
+    console.error("Error loading the shape file:", error);
 });
