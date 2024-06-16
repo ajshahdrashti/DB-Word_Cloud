@@ -1,30 +1,17 @@
 body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
 }
 
-#wordcloud {
-    width: 80%;
-    height: 80%;
+.container {
+  text-align: center;
 }
 
-.tooltip {
-    position: absolute;
-    background: white;
-    border: 1px solid black;
-    padding: 5px;
-    border-radius: 5px;
-    pointer-events: none;
-}
-
-/* Define CSS variables for colors */
-:root {
-    --color1: #89a;
-    --color2: #9ab;
-    --color3: #abc;
-    --hover-color: #ff6347; /* Define a hover color */
+canvas {
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
