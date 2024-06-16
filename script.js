@@ -104,7 +104,7 @@ const words = [
 ];
 
 // Load Gujarat shape JSON
-d3.json("gujarat-shape.json").then(shapeData => {
+d3.json("shape.json").then(shapeData => {
     // Define the projection and path generator
     const projection = d3.geoMercator().fitSize([700, 700], shapeData);
     const path = d3.geoPath().projection(projection);
