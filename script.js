@@ -104,40 +104,43 @@ const words = [
 ];
 
 function getRandomColor() {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
 }
 
-// Load the Gujarat state boundary from the GeoJSON file
-fetch('gujarat.geojson')
- .then(response => response.json())
- .then(data => {
-    const gujaratFeature = data.features.find(feature => feature.properties.NAME_1 === 'Gujarat');
-    if (gujaratFeature) {
-      const wordCloud = new WordCloud({
-        list: words,
-        canvas: document.getElementById('word-cloud-canvas'),
-        shape: gujaratFeature.geometry,
-        shapeRendering: 'geodesic',
-        padding: 10,
-        rotations: 2,
-        color: getRandomColor
-      });
+// Load the wordcloud library
+const wordcloudScript = document.createElement('script');
+wordcloudScript.src = 'https://cdn.jsdelivr.net/npm/wordcloud@1.1.1/dist/wordcloud.min.js';
+document.head.appendChild(wordcloudScript);
 
-      // Generate the word cloud
-      wordCloud.generate();
-    } else {
-      console.error('Gujarat state feature not found in the GeoJSON file.');
-    }
-  })
- .catch(error => {
-    console.error('Error loading the GeoJSON file:', error);
-  });
+wordcloudScript.onload = () => {
+  // Load the Gujarat state boundary from the GeoJSON file
+  fetch('gujarat.geojson')
+   .then(response => response.json())
+   .then(data => {
+      const gujaratFeature = data.features.find(feature => feature.properties.NAME_1 === 'Gujarat');
+      if (gujaratFeature) {
+        const canvas = document.getElementById('word-cloud-canvas');
+        const wordCloud = new WordCloud(canvas, {
+          list: words,
+          shape: gujaratFeature.geometry,
+          shapeRendering: 'geodesic',
+          padding: 10,
+          rotations: 2,
+          color: getRandomColor
+        });
 
-
-
-});
+        // Generate the word cloud
+        wordCloud.generate();
+      } else {
+        console.error('Gujarat state feature not found in the GeoJSON file.');
+      }
+    })
+   .catch(error => {
+      console.error('Error loading the GeoJSON file:', error);
+    });
+};
