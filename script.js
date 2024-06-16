@@ -112,73 +112,32 @@ function getRandomColor() {
     return color;
 }
 
-// Use the raw URL from your GitHub repository for the shape.json file
-const shapeUrl = 'https://raw.githubusercontent.com/ajshahdrashti/DB-Word_Cloud/main/shape.json';
+// Load the Gujarat state boundary from the GeoJSON file
+fetch('gujarat.geojson')
+ .then(response => response.json())
+ .then(data => {
+    const gujaratFeature = data.features.find(feature => feature.properties.NAME_1 === 'Gujarat');
+    if (gujaratFeature) {
+      const wordCloud = new WordCloud({
+        list: words,
+        canvas: document.getElementById('word-cloud-canvas'),
+        shape: gujaratFeature.geometry,
+        shapeRendering: 'geodesic',
+        padding: 10,
+        rotations: 2,
+        color: getRandomColor
+      });
 
-d3.json(shapeUrl).then(shapeData => {
-    const projection = d3.geoIdentity().reflectY(true).fitSize([700, 700], shapeData);
-    const path = d3.geoPath(projection);
-
-    const layout = d3.layout.cloud()
-        .size([700, 700])
-        .words(words.map(d => ({ text: d.text, size: d.size })))
-        .padding(1)
-        .rotate(d => d.size > 30 ? 90 : 0)
-        .fontSize(d => d.size * 5)
-        .on("end", draw);
-
-    layout.start();
-
-    function draw(words) {
-        console.log("Drawing words:", words);
-
-        const svg = d3.select("#wordcloud")
-            .append("svg")
-            .attr("width", layout.size()[0])
-            .attr("height", layout.size()[1]);
-
-        svg.append("defs")
-            .append("clipPath")
-            .attr("id", "gujarat-clip")
-            .append("path")
-            .attr("d", path(shapeData));
-
-        svg.append("path")
-            .datum(shapeData)
-            .attr("d", path)
-            .attr("fill", "none")
-            .attr("stroke", "#000");
-
-        svg.append("g")
-            .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
-            .attr("clip-path", "url(#gujarat-clip)")
-            .selectAll("text")
-            .data(words)
-            .enter().append("text")
-            .style("font-size", d => d.size + "px")
-            .style("fill", () => getRandomColor())
-            .attr("text-anchor", "middle")
-            .attr("transform", d => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
-            .text(d => d.text)
-            .on("mouseover", function (event, d) {
-                console.log("Mouseover on:", d.text);
-                const currentColor = d3.select(this).style("fill");
-
-                d3.select(this)
-                    .style("fill", `var(--hover-color)`);
-                const tooltip = d3.select("body").append("div")
-                    .attr("class", "tooltip")
-                    .style("left", (event.pageX + 10) + "px")
-                    .style("top", (event.pageY - 20) + "px")
-                    .text(`${d.text}: ${d.size}`)
-                    .style("display", "block");
-            })
-            .on("mouseout", function () {
-                d3.select(this)
-                    .style("fill", getRandomColor);
-                d3.selectAll(".tooltip").remove();
-            });
+      // Generate the word cloud
+      wordCloud.generate();
+    } else {
+      console.error('Gujarat state feature not found in the GeoJSON file.');
     }
-}).catch(error => {
-    console.error("Error loading the shape file:", error);
+  })
+ .catch(error => {
+    console.error('Error loading the GeoJSON file:', error);
+  });
+
+
+
 });
