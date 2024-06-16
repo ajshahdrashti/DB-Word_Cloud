@@ -18,22 +18,31 @@
 <body>
     <div id="map"></div>
     <script>
-        // Load the GeoJSON data
-        // Replace with the raw GitLab file URL or a different hosting service
-        const geojsonUrl = 'https://github.com/ajshahdrashti/DB-Word_Cloud/blob/main/gujarat.geojson';
+        // Create a map object
+        const map = L.map('map').setView([22.32, 71.22], 6);
+
+        // Add a tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Load the GeoJSON data from GitHub
+        const geojsonUrl = 'https://raw.githubusercontent.com/ajshahdrashti/DB-Word_Cloud//main/gujarat.geojson';
         fetch(geojsonUrl)
            .then(response => response.json())
            .then(data => {
-                // Create a map object
-                const map = L.map('map').setView([22.32, 71.22], 6);
-
-                // Add a tile layer
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                }).addTo(map);
-
                 // Add the GeoJSON layer
-                L.geoJSON(data).addTo(map);
+                L.geoJSON(data, {
+                    style: function(feature) {
+                        return {
+                            weight: 2,
+                            opacity: 1,
+                            color: 'black',
+                            fillOpacity: 0.5,
+                            fillColor: 'blue'
+                        };
+                    }
+                }).addTo(map);
             })
            .catch(error => console.error('Error loading GeoJSON data:', error));
     </script>
