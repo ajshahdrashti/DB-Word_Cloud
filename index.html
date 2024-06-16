@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Word Cloud</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://d3js.org/d3.v6.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-cloud@1.2.5/build/d3.layout.cloud.js"></script>
-    <script src="https://d3js.org/d3-geo.v2.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word Cloud in Gujarat Map Shape</title>
+  <style>
+    #word-cloud-canvas {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
 </head>
 <body>
-    <div id="wordcloud"></div>
-    <script src="script.js"></script>
+  <canvas id="word-cloud-canvas"></canvas>
+  <script src="script.js"></script>
 </body>
 </html>
