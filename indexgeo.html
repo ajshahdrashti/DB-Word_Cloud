@@ -11,14 +11,19 @@
             border: 1px solid black;
         }
     </style>
+    <!-- Include Leaflet library -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 </head>
 <body>
     <div id="map"></div>
     <script>
         // Load the GeoJSON data
-        fetch('gujarat.geojson')
-            .then(response => response.json())
-            .then(data => {
+        // Replace with the raw GitHub file URL or a different hosting service
+        const geojsonUrl = 'https://raw.githubusercontent.com/your-username/your-repo-name/main/gujarat.geojson';
+        fetch(geojsonUrl)
+           .then(response => response.json())
+           .then(data => {
                 // Create a map object
                 const map = L.map('map').setView([22.32, 71.22], 6);
 
@@ -30,7 +35,7 @@
                 // Add the GeoJSON layer
                 L.geoJSON(data).addTo(map);
             })
-            .catch(error => console.error('Error loading GeoJSON data:', error));
+           .catch(error => console.error('Error loading GeoJSON data:', error));
     </script>
 </body>
 </html>
