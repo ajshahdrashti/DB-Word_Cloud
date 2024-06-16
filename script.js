@@ -103,13 +103,19 @@ const words = [
  {'text': 'મત', 'size': 2}
 ];
 
-// Load Gujarat shape JSON
-d3.json("shape.json").then(shapeData => {
-    // Define the projection and path generator
-    const projection = d3.geoMercator().fitSize([700, 700], shapeData);
-    const path = d3.geoPath().projection(projection);
+function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
 
-    // Generate word positions using d3-cloud
+d3.json('path/to/gujarat.json').then(shapeData => {
+    const projection = d3.geoIdentity().reflectY(true).fitSize([700, 700], shapeData);
+    const path = d3.geoPath(projection);
+
     const layout = d3.layout.cloud()
         .size([700, 700])
         .words(words.map(d => ({ text: d.text, size: d.size })))
@@ -128,31 +134,29 @@ d3.json("shape.json").then(shapeData => {
             .attr("width", layout.size()[0])
             .attr("height", layout.size()[1]);
 
-        // Draw Gujarat shape
         svg.append("path")
             .datum(shapeData)
             .attr("d", path)
             .attr("fill", "none")
-            .attr("stroke", "black");
+            .attr("stroke", "#000");
 
-        // Draw words
         svg.append("g")
             .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
+            .attr("clip-path", "url(#gujarat-clip)")
             .selectAll("text")
             .data(words)
             .enter().append("text")
             .style("font-size", d => d.size + "px")
-            .style("fill",() => `var(${getRandomColor()})`) // Set random color variable
+            .style("fill", () => getRandomColor())
             .attr("text-anchor", "middle")
             .attr("transform", d => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
             .text(d => d.text)
             .on("mouseover", function (event, d) {
                 console.log("Mouseover on:", d.text);
-                const currentColor = d3.select(this).style("fill"); // Get the current color
+                const currentColor = d3.select(this).style("fill");
 
                 d3.select(this)
-                    .style("fill", `var(--hover-color)`); // Change to hover color
-
+                    .style("fill", `var(--hover-color)`);
                 const tooltip = d3.select("body").append("div")
                     .attr("class", "tooltip")
                     .style("left", (event.pageX + 10) + "px")
@@ -160,4 +164,10 @@ d3.json("shape.json").then(shapeData => {
                     .text(`${d.text}: ${d.size}`)
                     .style("display", "block");
             })
-           
+            .on("mouseout", function () {
+                d3.select(this)
+                    .style("fill", getRandomColor);
+                d3.selectAll(".tooltip").remove();
+            });
+    }
+});
