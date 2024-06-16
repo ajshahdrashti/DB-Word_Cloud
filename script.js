@@ -102,60 +102,71 @@ const words = [
  {'text': 'બારડોલી', 'size': 2},
  {'text': 'મત', 'size': 2}
 ];
-function getRandomColor() {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  }
+// Load the Gujarat GeoJSON data
+d3.json("gujarat.geojson", function(error, gujarat) {
+  if (error) {
+    console.error(error);
+  } else {
+    // Create an SVG element
+    const svg = d3.select("#wordcloud")
+     .append("svg")
+     .attr("width", 700)
+     .attr("height", 700);
 
-const layout = d3.layout.cloud()
-    .size([700, 700])
-    .words(words.map(d => ({ text: d.text, size: d.size })))
-    .padding(1)
-    .rotate(d => d.size > 30 ? 90 : 0) // Rotate words with size > 30 degrees
-    .fontSize(d => d.size * 5)
-    .on("end", draw);
+    // Render the Gujarat map shape
+    svg.append("path")
+     .datum(gujarat)
+     .attr("d", d3.geoPath())
+     .style("fill", "none")
+     .style("stroke", "black")
+     .style("stroke-width", 2);
 
-layout.start();
+    // Create a group element for the word cloud
+    const wordCloudGroup = svg.append("g")
+     .attr("transform", "translate(350, 350)"); // center the word cloud
 
-function draw(words) {
-    console.log("Drawing words:", words);
-    
-    d3.select("#wordcloud")
-        .append("svg")
-        .attr("width", layout.size()[0])
-        .attr("height", layout.size()[1])
-        .append("g")
-        .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
-        .selectAll("text")
-        .data(words)
-        .enter().append("text")
-        .style("font-size", d => d.size + "px")
-        .style("fill",() => `var(${getRandomColor()})`) // Set random color variable
-        .attr("text-anchor", "middle")
-        .attr("transform", d => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
-        .text(d => d.text)
-     
-        .on("mouseover", function (event, d) {
-            console.log("Mouseover on:", d.text);
-            const currentColor = d3.select(this).style("fill"); // Get the current color
-         
-            d3.select(this)
-                .style("fill", `var(--hover-color)`) // Change to hover color
-                // .attr("data-original-color", currentColor); // Store the original color
-            const tooltip = d3.select("body").append("div")
-                .attr("class", "tooltip")
-                .style("left", (event.pageX + 10) + "px")
-                .style("top", (event.pageY - 20) + "px")
-                .text(`${d.text}: ${d.size}`)
-                .style("display", "block");
+    // Create the word cloud layout
+    const layout = d3.layout.cloud()
+     .size([700, 700])
+     .words(words.map(d => ({ text: d.text, size: d.size })))
+     .padding(1)
+     .rotate(d => d.size > 30? 90 : 0) // Rotate words with size > 30 degrees
+     .fontSize(d => d.size * 5)
+     .on("end", draw);
+
+    layout.start();
+
+    function draw(words) {
+      console.log("Drawing words:", words);
+
+      wordCloudGroup.selectAll("text")
+       .data(words)
+       .enter().append("text")
+       .style("font-size", d => d.size + "px")
+       .style("fill", () => `var(${getRandomColor()})`) // Set random color variable
+       .attr("text-anchor", "middle")
+       .attr("transform", d => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
+       .text(d => d.text)
+
+       .on("mouseover", function(event, d) {
+          console.log("Mouseover on:", d.text);
+          const currentColor = d3.select(this).style("fill"); // Get the current color
+
+          d3.select(this)
+           .style("fill", `var(--hover-color)`) // Change to hover color
+            //.attr("data-original-color", currentColor); // Store the original color
+          const tooltip = d3.select("body").append("div")
+           .attr("class", "tooltip")
+           .style("left", (event.pageX + 10) + "px")
+           .style("top", (event.pageY - 20) + "px")
+           .text(`${d.text}: ${d.size}`)
+           .style("display", "block");
         })
-        .on("mouseout", function () {
-            d3.select(this)
-                .style("fill", getRandomColor);
-            d3.selectAll(".tooltip").remove();
+       .on("mouseout", function() {
+          d3.select(this)
+           .style("fill", getRandomColor);
+          d3.selectAll(".tooltip").remove();
         });
-}
+    }
+  }
+});
