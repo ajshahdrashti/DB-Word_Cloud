@@ -112,7 +112,7 @@ function getRandomColor() {
     return color;
 }
 
-d3.json(r"D:\VS Code\Shape.json").then(shapeData => {
+d3.json('https://github.com/ajshahdrashti/DB-Word_Cloud/blob/main/shape.json').then(shapeData => {
     const projection = d3.geoIdentity().reflectY(true).fitSize([700, 700], shapeData);
     const path = d3.geoPath(projection);
 
