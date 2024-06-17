@@ -1,26 +1,14 @@
-const gujaratMapImage = document.getElementById('gujaratMapImage');
+const mapCanvas = document.getElementById('mapCanvas');
+const mapContext = mapCanvas.getContext('2d');
+const mapImage = new Image();
 
-const layout = d3.layout.cloud()
-    .size([gujaratMapImage.width, gujaratMapImage.height])
-    .words(words.map(d => ({ text: d.text, size: d.size })))
-    .padding(1)
-    .rotate(d => d.size > 30 ? 90 : 0)
-    .fontSize(d => d.size * 5)
-    .on("end", draw)
-    .canvas(() => gujaratMapImage);
+mapImage.onload = function() {
+  mapCanvas.width = mapImage.width;
+  mapCanvas.height = mapImage.height;
+  mapContext.drawImage(mapImage, 0, 0);
+};
 
-function draw(words) {
-    console.log("Drawing words:", words);
-
-    d3.select("#wordcloud")
-        .append("svg")
-        .attr("width", gujaratMapImage.width)
-        .attr("height", gujaratMapImage.height)
-        // ... (rest of the code remains the same)
-}
-
-layout.start();
-
+mapImage.src = 'https://github.com/ajshahdrashti/DB-Word_Cloud/blob/main/gujarat-map.png'; // Replace with the actual path to your map image
 
 console.log("Script loaded");
 
