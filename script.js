@@ -10,6 +10,16 @@ mapImage.onload = function() {
 
 mapImage.src = 'https://github.com/ajshahdrashti/DB-Word_Cloud/blob/main/gujarat-map.png'; // Replace with the actual path to your map image
 
+// ... (your existing word cloud code)
+
+function draw(words) {
+  const svg = d3.select("#wordcloud")
+    .append("svg")
+    .attr("width", layout.size()[0])
+    .attr("height", layout.size()[1]);
+
+  // ... (the rest of your word cloud rendering code)
+}
 console.log("Script loaded");
 
 const words = [
