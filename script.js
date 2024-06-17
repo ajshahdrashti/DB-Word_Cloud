@@ -8,7 +8,7 @@ mapImage.onload = function() {
   mapContext.drawImage(mapImage, 0, 0);
 };
 
-mapImage.src = 'https://github.com/ajshahdrashti/DB-Word_Cloud/blob/main/gujarat-map.png?raw=true'; // Replace with the actual path to your map image
+mapImage.src = 'https://raw.githubusercontent.com/ajshahdrashti/DB-Word_Cloud/main/gujarat-map.png'; // Replace with the actual path to your map image
 
 // ... (your existing word cloud code)
 
