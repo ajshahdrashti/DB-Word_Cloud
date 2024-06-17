@@ -29,7 +29,7 @@ body {
 }
 
 .container {
-  text-align: center;
+  position: relative;
 }
 
 canvas {
