@@ -1,5 +1,5 @@
 const mapCanvas = document.getElementById('mapCanvas');
-const mapContext = mapCanvas.getContext('3d');
+const mapContext = mapCanvas.getContext('2d');
 const mapImage = new Image();
 
 mapImage.onload = function() {
