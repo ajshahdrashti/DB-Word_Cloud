@@ -1,6 +1,6 @@
 // Load the Gujarat map image
 const gujaratMapImage = new Image();
-gujaratMapImage.src = 'gujarat_map.png';
+gujaratMapImage.src = 'https://github.com/ajshahdrashti/DB-Word_Cloud/blob/main/gujarat-map.png';
 
 const layout = d3.layout.cloud()
     .size([700, 700])
@@ -20,10 +20,6 @@ function draw(words) {
         .attr("height", gujaratMapImage.height)
         // ... (rest of the code remains the same)
 }
-
-
-
-
 
 console.log("Script loaded");
 
