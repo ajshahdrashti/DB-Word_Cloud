@@ -1,26 +1,3 @@
-// Load the Gujarat map image
-const gujaratMapImage = new Image();
-gujaratMapImage.src = 'https://github.com/ajshahdrashti/DB-Word_Cloud/blob/main/gujarat-map.png';
-
-const layout = d3.layout.cloud()
-    .size([700, 700])
-    .words(words.map(d => ({ text: d.text, size: d.size })))
-    .padding(1)
-    .rotate(d => d.size > 30 ? 90 : 0)
-    .fontSize(d => d.size * 5)
-    .on("end", draw)
-    .canvas(() => gujaratMapImage); // Pass the Gujarat map image as a canvas
-
-function draw(words) {
-    console.log("Drawing words:", words);
-
-    d3.select("#wordcloud")
-        .append("svg")
-        .attr("width", gujaratMapImage.width)
-        .attr("height", gujaratMapImage.height)
-        // ... (rest of the code remains the same)
-}
-
 console.log("Script loaded");
 
 const words = [
@@ -125,71 +102,76 @@ const words = [
  {'text': 'બારડોલી', 'size': 2},
  {'text': 'મત', 'size': 2}
 ];
+
 // Load the Gujarat GeoJSON data
-d3.json("gujarat.geojson", function(error, gujarat) {
-  if (error) {
-    console.error(error);
-  } else {
-    // Create an SVG element
+d3.json("https://raw.githubusercontent.com/ajshahdrashti/DB-Word_Cloud/main/gujarat.geojson").then(gujarat => {
     const svg = d3.select("#wordcloud")
-     .append("svg")
-     .attr("width", 700)
-     .attr("height", 700);
+        .append("svg")
+        .attr("width", 700)
+        .attr("height", 700);
 
-    // Render the Gujarat map shape
+    const path = d3.geoPath();
+    const bounds = path.bounds(gujarat);
+    const widthScale = 700 / (bounds[1][0] - bounds[0][0]);
+    const heightScale = 700 / (bounds[1][1] - bounds[0][1]);
+    const scale = Math.min(widthScale, heightScale);
+    const transform = [
+        (700 - (bounds[1][0] - bounds[0][0]) * scale) / 2,
+        (700 - (bounds[1][1] - bounds[0][1]) * scale) / 2
+    ];
+
+    const projection = d3.geoIdentity()
+        .reflectY(true)
+        .fitSize([700, 700], gujarat);
+
+    const pathGenerator = path.projection(projection);
+
     svg.append("path")
-     .datum(gujarat)
-     .attr("d", d3.geoPath())
-     .style("fill", "none")
-     .style("stroke", "black")
-     .style("stroke-width", 2);
+        .datum(gujarat)
+        .attr("d", pathGenerator)
+        .style("fill", "none")
+        .style("stroke", "black")
+        .style("stroke-width", 2);
 
-    // Create a group element for the word cloud
-    const wordCloudGroup = svg.append("g")
-     .attr("transform", "translate(350, 350)"); // center the word cloud
-
-    // Create the word cloud layout
     const layout = d3.layout.cloud()
-     .size([700, 700])
-     .words(words.map(d => ({ text: d.text, size: d.size })))
-     .padding(1)
-     .rotate(d => d.size > 30? 90 : 0) // Rotate words with size > 30 degrees
-     .fontSize(d => d.size * 5)
-     .on("end", draw);
+        .size([700, 700])
+        .words(words.map(d => ({ text: d.text, size: d.size })))
+        .padding(1)
+        .rotate(d => d.size > 30 ? 90 : 0)
+        .fontSize(d => d.size * 5)
+        .on("end", draw);
 
     layout.start();
 
     function draw(words) {
-      console.log("Drawing words:", words);
-
-      wordCloudGroup.selectAll("text")
-       .data(words)
-       .enter().append("text")
-       .style("font-size", d => d.size + "px")
-       .style("fill", () => `var(${getRandomColor()})`) // Set random color variable
-       .attr("text-anchor", "middle")
-       .attr("transform", d => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
-       .text(d => d.text)
-
-       .on("mouseover", function(event, d) {
-          console.log("Mouseover on:", d.text);
-          const currentColor = d3.select(this).style("fill"); // Get the current color
-
-          d3.select(this)
-           .style("fill", `var(--hover-color)`) // Change to hover color
-            //.attr("data-original-color", currentColor); // Store the original color
-          const tooltip = d3.select("body").append("div")
-           .attr("class", "tooltip")
-           .style("left", (event.pageX + 10) + "px")
-           .style("top", (event.pageY - 20) + "px")
-           .text(`${d.text}: ${d.size}`)
-           .style("display", "block");
-        })
-       .on("mouseout", function() {
-          d3.select(this)
-           .style("fill", getRandomColor);
-          d3.selectAll(".tooltip").remove();
-        });
+        svg.append("g")
+            .attr("transform", `translate(${transform[0]},${transform[1]})scale(${scale})`)
+            .selectAll("text")
+            .data(words)
+            .enter().append("text")
+            .style("font-size", d => d.size + "px")
+            .style("fill", () => `var(${getRandomColor()})`)
+            .attr("text-anchor", "middle")
+            .attr("transform", d => `translate(${d.x},${d.y})rotate(${d.rotate})`)
+            .text(d => d.text)
+            .on("mouseover", function(event, d) {
+                d3.select(this).style("fill", `var(--hover-color)`);
+                d3.select("body").append("div")
+                    .attr("class", "tooltip")
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 20) + "px")
+                    .text(`${d.text}: ${d.size}`)
+                    .style("display", "block");
+            })
+            .on("mouseout", function() {
+                d3.select(this).style("fill", getRandomColor);
+                d3.selectAll(".tooltip").remove();
+            });
     }
-  }
+
+    function getRandomColor() {
+        const colors = ['--color1', '--color2', '--color3'];
+        return colors[Math.floor(Math.random() * colors.length)];
+    }
 });
+
