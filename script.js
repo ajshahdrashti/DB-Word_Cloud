@@ -1,3 +1,30 @@
+// Load the Gujarat map image
+const gujaratMapImage = new Image();
+gujaratMapImage.src = 'gujarat_map.png';
+
+const layout = d3.layout.cloud()
+    .size([700, 700])
+    .words(words.map(d => ({ text: d.text, size: d.size })))
+    .padding(1)
+    .rotate(d => d.size > 30 ? 90 : 0)
+    .fontSize(d => d.size * 5)
+    .on("end", draw)
+    .canvas(() => gujaratMapImage); // Pass the Gujarat map image as a canvas
+
+function draw(words) {
+    console.log("Drawing words:", words);
+
+    d3.select("#wordcloud")
+        .append("svg")
+        .attr("width", gujaratMapImage.width)
+        .attr("height", gujaratMapImage.height)
+        // ... (rest of the code remains the same)
+}
+
+
+
+
+
 console.log("Script loaded");
 
 const words = [
